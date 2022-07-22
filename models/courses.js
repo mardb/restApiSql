@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false
       },
-      
+
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -52,5 +52,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   )
 
+
+  Course.associate = (models) => {
+    Course.belongsTo(models.User, {
+      foreignKey: {
+        fieldName: 'userId',
+        allowNull: false,
+      }
+    });
+  };
 
 };
