@@ -1,14 +1,20 @@
 'use strict';
-
+// const { User, Course } = models;
 // load modules
 const express = require('express');
 const morgan = require('morgan');
+const routes =  require('./routes')
+// const sequelize = require('./models').sequelize
 
 // variable to enable global error logging
 const enableGlobalErrorLogging = process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'true';
 
 // create the Express app
 const app = express();
+app.use(express.json())
+
+// Add routes.
+app.use('/api', routes);
 
 //Sequilize instant connects database
 const Sequilize = require('sequelize');
@@ -25,7 +31,13 @@ const sequelize = new Sequilize({
     await sequelize.authenticate();
     console.log('Connection to database was successful!');
   } catch (error) {
-    console.log('Error connecting to the database.', error);
+    // console.log('Error connecting to the database.', error);
+    if (error.name === 'SequelizeValidationError') {
+      const errors = error.errors.map(err => err.message);
+      console.error('Validation errors: ', errors);
+  } else {
+throw error
+  }
   }
 })();
 
