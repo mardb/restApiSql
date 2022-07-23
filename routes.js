@@ -64,7 +64,7 @@ router.post(
         const errors = error.errors.map((err) => err.message);
         res.status(400).json({ errors });
       } else {
-        throw err;
+        throw error;
       }
     }
   })
