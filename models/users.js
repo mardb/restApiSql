@@ -1,5 +1,5 @@
 'use strict';
-const { Model, DataTypes} = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
   class User extends Model {
@@ -13,61 +13,80 @@ module.exports = (sequelize) => {
     }
   }
 
-User.init(
-  {
-    firstName: {
-      type: DataTypes.STRING,
-      allowNull: false, 
-      validate:{
-        notEmpty:{
-          msg: '"First Name" is required.'
-        }
-      }
-    },
-    lastName: {
-      type: DataTypes.STRING,
-        allowNull: false, 
-        validate:{
-          notEmpty:{
-            msg: '"Last Name" is required.'
+  User.init(
+    {
+      firstName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: 'Please provide your first name.',
+          },
+          notNull: {
+            msg: '"First Name" is required.',
+          },
+        },
+      },
+      lastName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: 'Please provide your last name.',
+          },
+          notNull: {
+            msg: '"Last Name" is required.',
+          },
+        },
+      },
+      emailAddress: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: {
+          msg:'The email you entered already exists.'
+        },
+        validate: {
+          notNull: {
+            msg:  '"Email address" is required.'
+          },
+          isEmail:{  
+            msg: 'Please provide a valid email address.', 
           }
-        }
+        },
+      },
+      password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: 'Please provide a password.',
+          },
+          notNull: {
+            msg: '"Password" is required.',
+          },
+          len: {
+            args:[8, 20],
+            msg: 'The password shoudl be between 8 and 20 characters in length.'
+          }
+        },
+      },
     },
-    emailAddress: {
-      type: DataTypes.STRING,
-      allowNull: false, 
-      validate:{
-        notEmpty:{
-          msg: '"Email" is required.'
-        }
-      }
-    },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate:{
-        notEmpty:{
-          msg: '"Password" is required.'
-        }
+    {
+      sequelize,
+      modelName: 'User',
     }
-  }
-},
-  {
-    sequelize,
-    modelName: "User"
-  }
-)
+  );
 
-User.associate = (models) => {
-  //association
-  User.hasMany(models.Course, {
-    as: 'user',//alias
-    foreignKey:{
+  User.associate = (models) => {
+    //association
+    User.hasMany(models.Course, {
+      as: 'user', //alias
+      foreignKey: {
         fieldName: 'userId',
-        allowNull: false, 
-    }
-  });
-};
+        allowNull: false,
+      },
+    });
+  };
 
- return User;
+  return User;
 };
