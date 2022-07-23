@@ -1,11 +1,12 @@
 'use strict';
 const express = require('express');
+
 // Construct a router instance.
 const router = express.Router();
 // as they are created.
 const {User, Course} = require('./models')
 
-
+const {authenticateUser} = require('./middleware/auth-user')
 
 function asyncHandler(cb){
   return async(req, res, next) => {
@@ -18,17 +19,17 @@ function asyncHandler(cb){
 }
 //USER
 //  returns all properties and values for the currently authenticated User along with a 200 HTTP status code.
-router.get('/users',asyncHandler( async(req, res) => {
+router.get('/users', authenticateUser, asyncHandler( async(req, res) => {
 // try{
   const user = req.currentUser
   await User.findAll()
-  res.status(200).json(user
-    // {
-      // id: user.id,
-      // firstName: user.firstName,
-      // lastName: user.lastName,
-      // emailAddress: user.emailAddress
-  // }
+  res.status(200).json(
+    {
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      emailAddress: user.emailAddress
+  }
   );
 // }catch(err){
 //   throw err
@@ -36,7 +37,7 @@ router.get('/users',asyncHandler( async(req, res) => {
 }));
 
 // creates a new user, set the Location header to "/", and return a 201 HTTP status code and no content.
-router.post('/users', asyncHandler(async(req, res) => {
+router.post('/users', authenticateUser, asyncHandler(async(req, res) => {
 //   // Get the user from the request body.
 
   try{
