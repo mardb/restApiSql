@@ -25,7 +25,11 @@ router.get(
   asyncHandler(async (req, res) => {
     // try{
     const user = req.currentUser;
-    await User.findAll();
+    // await User.findAll({
+    //   where: {
+    //     emailAddress: req.currentUser.emailAddress
+    //   },
+    //  } );
     res.status(200).json({
       id: user.id,
       firstName: user.firstName,
