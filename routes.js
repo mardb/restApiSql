@@ -5,18 +5,9 @@ const express = require('express');
 const router = express.Router();
 // as they are created.
 const { User, Course } = require('./models');
-
+const {asyncHandler} = require('./middleware/async-handler')
 const { authenticateUser } = require('./middleware/auth-user');
 
-function asyncHandler(cb) {
-  return async (req, res, next) => {
-    try {
-      await cb(req, res, next);
-    } catch (err) {
-      next(err);
-    }
-  };
-}
 //USER
 //  returns all properties and values for the currently authenticated User along with a 200 HTTP status code.
 router.get(
