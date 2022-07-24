@@ -45,7 +45,7 @@ router.get(
 // creates a new user, set the Location header to "/", and return a 201 HTTP status code and no content.
 router.post(
   '/users',
-  authenticateUser,
+  // authenticateUser,
   asyncHandler(async (req, res) => {
     //   // Get the user from the request body.
 
