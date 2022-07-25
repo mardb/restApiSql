@@ -14,22 +14,13 @@ router.get(
   '/users',
   authenticateUser,
   asyncHandler(async (req, res) => {
-    // try{
     const user = req.currentUser;
-    // await User.findAll({
-    //   where: {
-    //     emailAddress: req.currentUser.emailAddress
-    //   },
-    //  } );
     res.status(200).json({
       id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
       emailAddress: user.emailAddress,
     });
-    // }catch(err){
-    //   throw err
-    // }
   })
 );
 
@@ -41,10 +32,11 @@ router.post(
     //   // Get the user from the request body.
 
     try {
-      const user = await User.create(req.body);
+      const user = await req.body
+      User.create();
       // Set the status to 201 Created and end the response.
       // res.status(201).end();
-      res.status(201).json({ messsage: 'Account successfully created!' });
+      res.status(201).json({ messsage: 'Account successfully created!' }).end();
     } catch (error) {
       console.log('Error: ', error.name);
       // Validate that we have a `name` value.
@@ -81,15 +73,24 @@ router.get('/courses/:id', asyncHandler(async(req, res) => {
 
 // create a new course, set the Location header to the URI for the newly created course, and return a 201 HTTP status code and no content.
 router.post('/courses/', asyncHandler(async(req, res) => {
+  try{
+
 const course = await Course.create(req.body);
   res.status(201).set('Location', `courses/${course.id}`).end();
+} catch(error){
+  //if else 
+}
 }));
 
 //updates the corresponding course and return a 204 HTTP status code and no content.
 router.put('/courses/:id',asyncHandler(async (req, res) => {
+  try{
   const course = await Course.findByPk(req.params.id);
   await course.update(req.body);
   res.status(204).end()
+  } catch(error){
+    //if else 
+  }
 }));
 
 //deletes the corresponding course - returns a 204 HTTP status code and no content.
