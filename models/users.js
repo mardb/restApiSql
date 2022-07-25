@@ -60,11 +60,8 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,//sets a virtual field
         allowNull: false,
         set(val){
-          if(val === this.password){
             const hashedPassword = bcrypt.hashSync(val, 10);
             this.setDataValue('confirmedPassword', hashedPassword);
-
-          }
         },
         validate: {
           notEmpty: {

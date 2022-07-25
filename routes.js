@@ -7,6 +7,7 @@ const router = express.Router();
 const { User, Course } = require('./models');
 const { asyncHandler } = require('./middleware/async-handler');
 const { authenticateUser } = require('./middleware/auth-user');
+const bcrypt = require('bcryptjs/dist/bcrypt');
 
 //USER
 //  returns all properties and values for the currently authenticated User along with a 200 HTTP status code.
@@ -31,12 +32,19 @@ router.post(
   asyncHandler(async (req, res) => {
    // Get the user from the request body.
     try {
-      await User.create(req.body);
+      
+      const user  = req.body
+      await User.create({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        emailAddress: user.emailAddress,
+        password: bcrypt.hashSync(user.password, 10)
+      });
       // Set the status to 201 Created and end the response.
       // res.status(201).end();
+      res.location('/')
       res
         .status(201)
-        .location('/')
         .json({ messsage: 'Account successfully created!' })
         .end();
     } catch (error) {
