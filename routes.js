@@ -30,17 +30,17 @@ router.post(
   '/users',
   // authenticateUser,
   asyncHandler(async (req, res) => {
-   // Get the user from the request body.
+    // Get the user from the request body.
     try {
-      
-      // const user  = req.body
-      await User.create(req.body)
-      //   {
-      //   firstName: user.firstName,
-      //   lastName: user.lastName,
-      //   emailAddress: user.emailAddress,
-      //   password: bcrypt.hashSync(user.password, 10)
-      // });
+      const user  = req.body
+      await User.create(
+        // req.body);
+        {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        emailAddress: user.emailAddress,
+        password: user.password
+      });
       // Set the status to 201 Created and end the response.
       // res.status(201).end();
       res
@@ -69,12 +69,14 @@ router.get(
   '/courses',
   asyncHandler(async (req, res) => {
     const courses = await Course.findAll({
+
+      include: [{
+        model: User ,
+        as: 'user'
+      }],
       attributes: {
-        exclude: [
-          'createdAt',
-          'updatedAt'
-        ]
-      }
+        exclude: ['createdAt', 'updatedAt'],
+      },
     });
     //TODO: include the User associated with each course
     res.status(200).json({ courses });
@@ -85,8 +87,18 @@ router.get(
 router.get(
   '/courses/:id',
   asyncHandler(async (req, res) => {
-    const course = await Course.findOne();
-    //TODO: include the User associated with each course
+    const course = await Course.findOne({
+      //TODO: include the User associated with each course
+      attributes: {
+        exclude: ['createdAt', 'updatedAt'],
+      },
+      where: { id: req.params.id },
+      include: [{
+        model: User ,
+        as: 'user'
+      }]
+    });
+
     res.status(200).json({ course });
   })
 );
