@@ -43,7 +43,6 @@ module.exports = ( sequelize) => {
 
       materialsNeeded: {
         type: DataTypes.STRING,
-
       },
 
       id: {

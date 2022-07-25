@@ -61,7 +61,7 @@ module.exports = (sequelize) => {
         allowNull: false,
         set(val){
             const hashedPassword = bcrypt.hashSync(val, 10);
-            this.setDataValue('confirmedPassword', hashedPassword);
+            this.setDataValue('password', hashedPassword);
         },
         validate: {
           notEmpty: {
@@ -70,10 +70,10 @@ module.exports = (sequelize) => {
           notNull: {
             msg: '"Password" is required.',
           },
-          len: {
-            args:[8, 20],
-            msg: 'The password should be between 8 and 20 characters in length.'
-          }
+          // len: {
+          //   args:[6, 20],
+          //   msg: 'The password should be between 8 and 20 characters in length.'
+          // }
         },
       },
       // confirmedPassword:{

@@ -46,7 +46,7 @@ router.post(
       res
         .status(201)
         .location('/')
-        .json({ messsage: 'Account successfully created!' })
+        .json({ message: 'Account successfully created!' })
         .end();
     } catch (error) {
       console.log('Error: ', error.name);
@@ -69,6 +69,12 @@ router.get(
   '/courses',
   asyncHandler(async (req, res) => {
     const courses = await Course.findAll();
+    attributes: {
+      exclude: [
+        'createdAt',
+        'updatedAt'
+      ]
+    }
     //TODO: include the User associated with each course
     res.status(200).json({ courses });
   })
@@ -91,7 +97,7 @@ router.post(
   asyncHandler(async (req, res) => {
     try {
       const course = await Course.create(req.body);
-      res.status(201).set('Location', `courses/${course.id}`).end();
+      res.status(201).location(`courses/${course.id}`).end();
     } catch (error) {
       //if else
       if (
