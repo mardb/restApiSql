@@ -32,11 +32,10 @@ router.post(
     //   // Get the user from the request body.
 
     try {
-      const user = await req.body
-      User.create();
+      await User.create(req.body)
       // Set the status to 201 Created and end the response.
       // res.status(201).end();
-      res.status(201).json({ messsage: 'Account successfully created!' }).end();
+      res.status(201).location('/').json({ messsage: 'Account successfully created!' }).end();
     } catch (error) {
       console.log('Error: ', error.name);
       // Validate that we have a `name` value.
@@ -79,6 +78,15 @@ const course = await Course.create(req.body);
   res.status(201).set('Location', `courses/${course.id}`).end();
 } catch(error){
   //if else 
+  if (
+    error.name === 'SequelizeValidationError' ||
+    error.name === 'SequelizeUniqueConstrainError'
+  ) {
+    const errors = error.errors.map((err) => err.message);
+    res.status(400).json({ errors });
+  } else {
+    throw error;
+  }
 }
 }));
 
@@ -90,14 +98,28 @@ router.put('/courses/:id',asyncHandler(async (req, res) => {
   res.status(204).end()
   } catch(error){
     //if else 
+    if (
+      error.name === 'SequelizeValidationError' ||
+      error.name === 'SequelizeUniqueConstrainError'
+    ) {
+      const errors = error.errors.map((err) => err.message);
+      res.status(400).json({ errors });
+    } else {
+      throw error;
+    }
   }
 }));
 
 //deletes the corresponding course - returns a 204 HTTP status code and no content.
 router.delete('/courses/:id', asyncHandler(async(req, res) => {
   const course = await Course.findByPk(req.params.id);
-  await course.destroy()
-  res.status(204).end()
+  if(course.userId === req.currentUser.id){
+    await course.destroy(req.body)
+    res.status(204).end()
+  } else{
+    res.status(404).json({message:'Course not found.'}).end()
+  }
+
 
 }));
 

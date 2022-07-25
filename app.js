@@ -17,8 +17,8 @@ app.use(express.json())
 app.use('/api', routes);
 
 //Sequilize instant connects database
-const Sequilize = require('sequelize');
-const sequelize = new Sequilize({
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize({
   dialect:'sqlite',
   storage: 'fsjstd-restapi.db'
 });
