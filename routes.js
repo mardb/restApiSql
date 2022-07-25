@@ -33,18 +33,19 @@ router.post(
    // Get the user from the request body.
     try {
       
-      const user  = req.body
-      await User.create({
-        firstName: user.firstName,
-        lastName: user.lastName,
-        emailAddress: user.emailAddress,
-        password: bcrypt.hashSync(user.password, 10)
-      });
+      // const user  = req.body
+      await User.create(req.body)
+      //   {
+      //   firstName: user.firstName,
+      //   lastName: user.lastName,
+      //   emailAddress: user.emailAddress,
+      //   password: bcrypt.hashSync(user.password, 10)
+      // });
       // Set the status to 201 Created and end the response.
       // res.status(201).end();
-      res.location('/')
       res
         .status(201)
+        .location('/')
         .json({ messsage: 'Account successfully created!' })
         .end();
     } catch (error) {
