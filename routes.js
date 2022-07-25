@@ -68,13 +68,14 @@ router.post(
 router.get(
   '/courses',
   asyncHandler(async (req, res) => {
-    const courses = await Course.findAll();
-    attributes: {
-      exclude: [
-        'createdAt',
-        'updatedAt'
-      ]
-    }
+    const courses = await Course.findAll({
+      attributes: {
+        exclude: [
+          'createdAt',
+          'updatedAt'
+        ]
+      }
+    });
     //TODO: include the User associated with each course
     res.status(200).json({ courses });
   })
