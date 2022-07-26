@@ -11,13 +11,16 @@ exports.authenticateUser = async (req, res, next) => {
   const credentials = auth(req);
 
   if (credentials) {
-    const user = await User.findOne({ where: {emailAddress: credentials.name} });
+    const user = await User.findOne({
+      where: { emailAddress: credentials.name },
+    });
     if (user) {
-      const authenticated = bcrypt
-        .compareSync(credentials.pass, user.password);
+      const authenticated = bcrypt.compareSync(credentials.pass, user.password);
       if (authenticated) {
         // If the passwords match
-        console.log(`Authentication successful for email: ${user.emailAddress} `);
+        console.log(
+          `Authentication successful for email: ${user.emailAddress} `
+        );
         // Store the user on the Request object.
         req.currentUser = user;
       } else {
@@ -34,8 +37,6 @@ exports.authenticateUser = async (req, res, next) => {
     console.warn(message);
     res.status(401).json({ message: 'Access Denied' });
   } else {
-
-  next();
+    next();
   }
 };
- 
