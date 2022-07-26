@@ -3,15 +3,16 @@
 // load modules
 const express = require('express');
 const morgan = require('morgan');
-const routes =  require('./routes')
+const routes = require('./routes');
 // const sequelize = require('./models').sequelize
 
 // variable to enable global error logging
-const enableGlobalErrorLogging = process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'true';
+const enableGlobalErrorLogging =
+  process.env.ENABLE_GLOBAL_ERROR_LOGGING === 'true';
 
 // create the Express app
 const app = express();
-app.use(express.json())
+app.use(express.json());
 
 // Add routes.
 app.use('/api', routes);
@@ -19,8 +20,8 @@ app.use('/api', routes);
 //Sequilize instant connects database
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize({
-  dialect:'sqlite',
-  storage: 'fsjstd-restapi.db'
+  dialect: 'sqlite',
+  storage: 'fsjstd-restapi.db',
 });
 
 //tests if connection is ok
@@ -33,14 +34,13 @@ const sequelize = new Sequelize({
   } catch (error) {
     // console.log('Error connecting to the database.', error);
     if (error.name === 'SequelizeValidationError') {
-      const errors = error.errors.map(err => err.message);
+      const errors = error.errors.map((err) => err.message);
       console.error('Validation errors: ', errors);
-  } else {
-throw error
-  }
+    } else {
+      throw error;
+    }
   }
 })();
-
 
 // setup morgan which gives us http request logging
 app.use(morgan('dev'));
