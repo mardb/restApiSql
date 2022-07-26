@@ -1,40 +1,38 @@
 'use strict';
-const Sequelize = require('sequelize')
+const Sequelize = require('sequelize');
 const { Model, DataTypes } = require('sequelize');
 const users = require('./users');
 
-module.exports = ( sequelize) => {
+module.exports = (sequelize) => {
   class Course extends Sequelize.Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
-      // define association here
-    }
+    static associate(models) {}
   }
 
   Course.init(
     {
       title: {
         type: DataTypes.STRING,
-        allowNull: false, 
-        validate:{
-          notEmpty:{
-            msg: '"Title" is required.'
-          }
-        }
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: '"Title" is required.',
+          },
+        },
       },
 
       description: {
         type: DataTypes.TEXT,
-        allowNull: false, 
-        validate:{
-          notEmpty:{
-            msg: '"Description" is required.'
-          }
-        }
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: '"Description" is required.',
+          },
+        },
       },
 
       estimatedTime: {
@@ -50,20 +48,19 @@ module.exports = ( sequelize) => {
         primaryKey: true,
         autoIncrement: true,
       },
-
-    }, {sequelize}
-  )
-
+    },
+    { sequelize }
+  );
 
   Course.associate = (models) => {
     //associations
     Course.belongsTo(models.User, {
-      as: 'user',//alias
+      as: 'user', //alias
       foreignKey: {
         fieldName: 'userId',
         allowNull: false,
-      }
+      },
     });
   };
-return Course;
+  return Course;
 };
