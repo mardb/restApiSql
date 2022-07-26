@@ -9,13 +9,13 @@ class Context {
   }
 
   static prepareQuery(text) {
-    return text
-      .replace(/\s+/g, ' ')
-      .trim();
+    return text.replace(/\s+/g, ' ').trim();
   }
 
   static log(text, params) {
-    console.info(`Running query: "${text}", with params: ${JSON.stringify(params)}`);
+    console.info(
+      `Running query: "${text}", with params: ${JSON.stringify(params)}`
+    );
   }
 
   execute(text, ...params) {
