@@ -9,9 +9,7 @@ module.exports = (sequelize) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
-      // define association here
-    }
+    static associate(models) {}
   }
 
   User.init(
@@ -56,8 +54,8 @@ module.exports = (sequelize) => {
         },
       },
       password: {
-        // type: DataTypes.VIRTUAL,//sets a virtual field
-        type: DataTypes.STRING,//sets a virtual field
+        // type: DataTypes.VIRTUAL, sets a virtual field
+        type: DataTypes.STRING,
         allowNull: false,
         set(val){
             const hashedPassword = bcrypt.hashSync(val, 10);
@@ -70,10 +68,6 @@ module.exports = (sequelize) => {
           notNull: {
             msg: '"Password" is required.',
           },
-          // len: {
-          //   args:[6, 20],
-          //   msg: 'The password should be between 8 and 20 characters in length.'
-          // }
         },
       },
     },
