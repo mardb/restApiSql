@@ -9,7 +9,6 @@ const { asyncHandler } = require('./middleware/async-handler');
 const { authenticateUser } = require('./middleware/auth-user');
 const bcrypt = require('bcryptjs/dist/bcrypt');
 
-//USER
 //  returns all properties and values for the currently authenticated User along with a 200 HTTP status code.
 router.get(
   '/users',
@@ -21,6 +20,10 @@ router.get(
       firstName: user.firstName,
       lastName: user.lastName,
       emailAddress: user.emailAddress,
+      attributes: {
+        include: ['id', 'firstName', 'lastName', 'emailAddress'],
+        exclude: ['createdAt', 'updatedAt'],
+      },
     });
   })
 );
@@ -28,21 +31,27 @@ router.get(
 // creates a new user, set the Location header to "/", and return a 201 HTTP status code and no content.
 router.post(
   '/users',
-  // authenticateUser,
   asyncHandler(async (req, res) => {
     // Get the user from the request body.
     try {
-      const user  = req.body
-      await User.create(
-        // req.body);
-        {
+      const user = req.body;
+      await User.create({
         firstName: user.firstName,
         lastName: user.lastName,
         emailAddress: user.emailAddress,
-        password: user.password
+        password: user.password,
+
+        include: [
+          {
+            model: User,
+            as: 'user',
+            attributes: {
+              include: ['id', 'firstName', 'lastName', 'emailAddress'],
+              exclude: ['createdAt', 'updatedAt'],
+            },
+          },
+        ],
       });
-      // Set the status to 201 Created and end the response.
-      // res.status(201).end();
       res
         .status(201)
         .location('/')
@@ -69,16 +78,17 @@ router.get(
   '/courses',
   asyncHandler(async (req, res) => {
     const courses = await Course.findAll({
-
-      include: [{
-        model: User ,
-        as: 'user'
-      }],
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['id', 'firstName', 'lastName', 'emailAddress'],
+        },
+      ],
       attributes: {
         exclude: ['createdAt', 'updatedAt'],
       },
     });
-    //TODO: include the User associated with each course
     res.status(200).json({ courses });
   })
 );
@@ -88,15 +98,17 @@ router.get(
   '/courses/:id',
   asyncHandler(async (req, res) => {
     const course = await Course.findOne({
-      //TODO: include the User associated with each course
       attributes: {
         exclude: ['createdAt', 'updatedAt'],
       },
       where: { id: req.params.id },
-      include: [{
-        model: User ,
-        as: 'user'
-      }]
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['id', 'firstName', 'lastName', 'emailAddress'],
+        },
+      ],
     });
 
     res.status(200).json({ course });
@@ -112,7 +124,6 @@ router.post(
       const course = await Course.create(req.body);
       res.status(201).location(`courses/${course.id}`).end();
     } catch (error) {
-      //if else
       if (
         error.name === 'SequelizeValidationError' ||
         error.name === 'SequelizeUniqueConstrainError'
@@ -136,7 +147,6 @@ router.put(
       await course.update(req.body);
       res.status(204).end();
     } catch (error) {
-      //if else
       if (
         error.name === 'SequelizeValidationError' ||
         error.name === 'SequelizeUniqueConstrainError'
