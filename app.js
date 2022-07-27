@@ -3,7 +3,9 @@
 // load modules
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 const routes = require('./routes');
+
 // const sequelize = require('./models').sequelize
 
 // variable to enable global error logging
@@ -12,12 +14,13 @@ const enableGlobalErrorLogging =
 
 // create the Express app
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 // Add routes.
 app.use('/api', routes);
 
-//Sequilize instant connects database
+//Sequelize instant connects database
 const Sequelize = require('sequelize');
 const sequelize = new Sequelize({
   dialect: 'sqlite',
