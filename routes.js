@@ -21,8 +21,14 @@ router.get(
       lastName: user.lastName,
       emailAddress: user.emailAddress,
       attributes: {
-        include: ['id', 'firstName', 'lastName', 'emailAddress'],
-        exclude: ['createdAt', 'updatedAt'],
+        include: [
+          {
+            attributes: ['id', 'firstName', 'lastName', 'emailAddress'],
+          },
+        ],
+        attributes: {
+          exclude: ['createdAt', 'updatedAt'],
+        },
       },
     });
   })
